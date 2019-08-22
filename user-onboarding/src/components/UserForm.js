@@ -33,3 +33,30 @@ const UserForm = ({ errors, touched, values }) => {
         </div>
     )
 }
+const FormikUserForm = withFormik({
+    mapPropsToValues({ name, email, password, terms }) {
+      return {
+        name: name || "",
+        email: email || "",
+        password: password || "",
+        terms: terms || false,
+      };
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().required(),
+      password: Yup.string().required(),
+      terms: Yup.boolean().required()
+    }),
+    handleSubmit(values, { setStatus }) {
+      axios
+        .post("<https://reqres.in/api/users/>", values)
+        .then(res => {
+          setStatus(res.data);
+        })
+        .catch(err => console.log(err.response));
+    }
+  })(UserForm); 
+
+
+export default FormikUserForm;
